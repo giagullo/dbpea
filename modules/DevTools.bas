@@ -7,7 +7,7 @@ Dim component As VBComponent
 Dim filePath As String
 For Each component In Application.VBE.ActiveVBProject.VBComponents
 Debug.Print component.Name
-If component.Type = vbext_ct_ClassModule Or component.Type = vbext_ct_StdModule Or component.Type = vbext_ct_MSForm Then
+If component.Type = vbext_ct_ClassModule Or component.Type = vbext_ct_StdModule Then
     filePath = destPath & component.Name & ToFileExtension(component.Type)
     Debug.Print filePath
     component.Export destPath & component.Name & ToFileExtension(component.Type)

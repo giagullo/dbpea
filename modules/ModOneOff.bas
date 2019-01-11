@@ -17,9 +17,9 @@ Sub mod1_importUtilizzo()
     ' On Error Resume Next
     Do While Not rstImport.EOF
         ' recupera ID task
-        rstTask.FindFirst ("codSIPROS = '" & rstImport!task & "'")
+        rstTask.FindFirst ("codSIPROS = '" & rstImport!Task & "'")
         If rstTask.NoMatch Then
-            Debug.Print "Task " & rstImport!task & " non trovata"
+            Debug.Print "Task " & rstImport!Task & " non trovata"
             GoTo avanti
         End If
         idTask = rstTask!ID
