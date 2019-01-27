@@ -1,0 +1,7 @@
+*** template foglio raccolta dati ***
+formula formattazione condizionale =E($D4<=F$2;F$2<=$E4)
+colonna 2 formula =CERCA.VERT([@IDTask];TabTasks;2)
+Colonna HiddenIni
+=CONCATENA(ANNO(cerca.vert([@IDTask];TabTasks;4));TESTO(MESE(cerca.vert([@IDTask];TabTasks;4));"00"))
+Colonna HiddenFine
+=CONCATENA(ANNO(cerca.vert([@IDTask];TabTasks;5));TESTO(MESE(cerca.vert([@IDTask];TabTasks;5));"00"))
