@@ -7,13 +7,13 @@ Attribute VB_Name = "modExtract"
 ' Input data:
 '   scenario name: String - name of scenario to extract
 '   portfolios: list of portfolios to include in the result file
-'   iMonthIni, iMonthFin: Integer, staring months to report
-'   nMonths, number of months to report, max = 12
+'   year, month: Integer, starting months to report
+'   nMonths, number of months to report, 1 to 12
 
 
 Option Compare Database
 Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
-                                iMonthIni As Long, nMonths As Long)
+                                year As Integer, month As Integer, nMonths As Integer)
 
     Dim ok As Boolean
     ' First data row in TabDati
@@ -22,21 +22,18 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
     Const iFirstDataCol = 6
     
      ' check input
-    Dim year As Long
-    Dim mon As Long
-
+    Dim iMonthIni As Long
+    
     Debug.Print "Processing " & scenario
     If UBound(portfolios) - LBound(portfolios) + 1 = 0 Then
         Err.Raise 513, Description:="Bad input: zero length array"
         Exit Sub
     End If
-    year = iMonthIni / 100
-    mon = iMonthIni - year * 100
     If year < 2010 Then
         Err.Raise 513, Description:="Bad input: year too old"
         Exit Sub
     End If
-    If mon < 1 Or mon > 12 Then
+    If month < 1 Or month > 12 Then
         Err.Raise 513, Description:="Bad input: bad month number"
         Exit Sub
     End If
@@ -44,7 +41,8 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
         Err.Raise 513, Description:="Bad input: bad number of months (1 to 12)"
         Exit Sub
     End If
-
+    ' set month ini as YYYYMM numeric
+    iMonthIni = CLng(year) * 100 + month
          
      ' open excel template
     ok = modExcel_OpenExcel(True)
@@ -132,13 +130,15 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
     ' at row 3, from "F" onward, write date 1/month/year
     Dim i As Long
     Dim iCol As Integer
+    Dim iYear As Long
+    Dim iThisMon As Long
     For i = iMonthIni To iMonthFin
         Dim d As Date
         
         iCol = iFirstDataCol + i - iMonthIni
-        year = i / 100
-        mon = i - year * 100
-        d = DateSerial(year, mon, 1)
+        iYear = i / 100
+        iThisMon = i - CLng(year) * 100
+        d = DateSerial(iYear, iThisMon, 1)
         ok = modExcel_WriteCell(Chr(64 + iCol), 3, d)
         If Not ok Then
             Exit Sub
@@ -197,7 +197,7 @@ End Sub
 
 Private Sub test1()
     Dim a(1) As String
-     ' a(0) = "BIR"
-     ' a(1) = "SDP"
-    modExtract_populateDataSheet "4Q2018", a, 201910, 1
+     a(0) = "BIR"
+     a(1) = "SDP"
+    modExtract_populateDataSheet "4Q2018", a, 2019, 2, 11
 End Sub
