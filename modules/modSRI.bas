@@ -2,115 +2,140 @@ Attribute VB_Name = "modSRI"
 Option Compare Database
 Dim db As Database
 
-Sub modSRI_importData()
-    
-    modSRI_importRowData
+' Import data from excel sFile into Utilizzo for an year and a month
+' deleting records first if override
+Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, override As Boolean)
+
+    ' modSRI_importRowData
     
     ' Start processing imported table
     
-    Dim rstImport As Recordset
-    Dim rstUtilizzo As Recordset
     Dim rstTask As Recordset
     Dim rstRisorsa As Recordset
     Dim idTask As Integer, idRisorsa As Integer
-    Dim sAnno As String
-    Dim rowNum  As Integer
-    rowNum = 1
-    sAnno = InputBox("Indicare l'anno di cui si sta elaborando il consuntivo", "Input richiesto")
-    If Not IsNumeric(sAnno) Then
-        MsgBox "Digitare un anno in formato AAAA", vbCritical, "Errore input"
-        Exit Sub
-    End If
-    Dim anno As Integer
-    anno = CDec(sAnno)
-    If anno < 2018 Or anno > Year(Now) Then
-        MsgBox "Anno fuori range", vbCritical, "Errore input"
-        Exit Sub
-    End If
+    Dim sSqlInsert As String
     
     Set db = CurrentDb
-    Set rstImport = db.OpenRecordset("tblTempSRI", dbOpenDynaset)
+
     Set rstTask = db.OpenRecordset("Task", dbOpenDynaset)
     Set rstRisorsa = db.OpenRecordset("Risorsa", dbOpenDynaset)
     
+    ' Clean current records if needed
+    If override Then
+        Debug.Print "deleting rows from Utilizzo"
+        db.Execute ("delete from Utilizzo where mese >= " & CLng(aYear) * 100 + aMonth)
+    End If
     
-    ' On Error GoTo finally
+    ' open excel file
+    Dim ok As Boolean
+    ok = modExcel_OpenExcel(True)
+    If Not ok Then
+        Err.Raise 555, Description:="Errore apertura Excel"
+    End If
+        
+    ok = modExcel_OpenWorkBook(sFile)
+    If Not ok Then
+        Err.Raise 555, Description:="Errore apertura file Excel " & sFile
+    End If
+    modExcel_OpenActiveWorkSheet
+    Dim r As Long
+    r = 2
     
-    ' Clean current year, replace all data from SRI
-    db.Execute ("delete from Utilizzo where mese >= " & sAnno & "00")
-    
-    Set rstUtilizzo = db.OpenRecordset("Utilizzo", dbOpenDynaset)
-    
-    Do While Not rstImport.EOF
+    Dim sXlPrg As String
+    Dim sXlTask As String, sXlBusinessPartner As String, sXlMonth As String, sXlAllocated As String
+    ok = modExcel_ReadCell("A", r, sXlPrg)
+    Do While sXlPrg <> ""
+        ' read row r from excel
+        ' TODO substitute with true column names
+        ok = modExcel_ReadCell("B", r, sXlTask)
+        ok = modExcel_ReadCell("C", r, sXlBusinessPartner)
+        ok = modExcel_ReadCell("D", r, sXlMonth)
+        ok = modExcel_ReadCell("E", r, sXlAllocated)
+        If Not ok Then
+            Err.Raise 555, Description:="Errore lettura da excel"
+        End If
+        Debug.Print "Excel data: ", sXlTask, sXlBusinessPartner, sXlMonth, sXlAllocated
+        
+        ' build month in AAAAMM format
+        If Not IsNumeric(sXlMonth) Then
+             logError "modSRI_importData", "mese non numerico", r
+             GoTo avanti
+        End If
+        If CDec(sXlMonth) <> aMonth Then
+            GoTo avanti
+        End If
+        s = CLng(aYear) * 100 + aMonth
+        
         ' recupera ID task
-        rstTask.FindFirst ("codSIPROS = '" & rstImport!Task & "'")
+        rstTask.FindFirst ("codSIPROS = '" & sXlTask & "'")
         If rstTask.NoMatch Then
-            logError "modSRI_importData", "Task " & rstImport!Task & " non trovata", rowNum
+            logError "modSRI_importData", "Task " & sXlTask & " non trovata", r
             GoTo avanti
         End If
         idTask = rstTask!ID
         
         ' recupera ID risorsa
-        rstRisorsa.FindFirst ("Nome = """ & rstImport![Business partner] & """")
+        rstRisorsa.FindFirst ("Nome = """ & sXlBusinessPartner & """")
                 
         If rstRisorsa.NoMatch Then
-            logError "modSRI_importData", "Risorsa " & doubleApex(rstImport![Business partner]) & " non trovata", rowNum
+            logError "modSRI_importData", "Risorsa " & doubleApex(sXlBusinessPartner) & " non trovata", r
             GoTo avanti
         End If
         idRisorsa = rstRisorsa!ID
         
-        
-        ' build month in AAAAMM format
-        s = anno & Format(rstImport![Mese Fine], "00")
-        
         ' find utiizzo
         Dim dblUtilizzo As Double
-        If Not IsNumeric(rstImport![Consuntivi di mesi allocati]) Then
-            If rstImport![Consuntivi di mesi allocati] <> "" Then
-                logError "modSRI_importData", "dato numerico non valido", rowNum
-            End If
+        If Not IsNumeric(Nz(sXlAllocated, "x")) Then
+            logError "modSRI_importData", "dato numerico non valido", r
             GoTo avanti
         End If
-        dblUtilizzo = CDbl(rstImport![Consuntivi di mesi allocati]) * 100
-            
+        dblUtilizzo = CDbl(sXlAllocated) * 100
+        If dblUtilizzo < 0 Or dblUtilizzo > 100 Then
+            logError "modSRI_importData", "dato numerico fuori range", r
+            GoTo avanti
+        End If
+                        
         ' inserisci utilizzo
-        With rstUtilizzo
-            .AddNew
-            !idTask = idTask
-            !idRisorsa = idRisorsa
-            !mese = s
-            !pct = dblUtilizzo
-            .Update
-        End With
+        sSqlInsert = "INSERT INTO Utilizzo (idTask, idRisorsa, mese, pct) VALUES (" & _
+                    idTask & "," & _
+                    idRisorsa & "," & _
+                    s & "," & _
+                    dblUtilizzo & ")"
+        ' Stop
         
-        ' Debug.Print "Inserito "; idTask, idRisorsa, s, dblUtilizzo
+        Debug.Print sSqlInsert
+        db.Execute sSqlInsert, dbFailOnError
 avanti:
-        rstImport.MoveNext
-        rowNum = rowNum + 1
+        r = r + 1
+        ok = modExcel_ReadCell("A", r, sXlPrg)
+        If Not ok Then
+            Err.Raise 555, Description:="Errore lettura da excel"
+        End If
     Loop
-
-finally:
-    rstImport.Close
+    
+    ' rstImport.Close
     rstTask.Close
     rstRisorsa.Close
-    Set rstImport = Nothing
+    db.Close
+    ' Set rstImport = Nothing
     Set rstTask = Nothing
     Set rstRisorsa = Nothing
+    Set db = Nothing
     
 End Sub
+Function modSRI_verifyOverride(aMonth As Integer, aYear As Integer) As Long
+    Dim db As Database
+    Dim rs As Recordset
+    Dim numExisting As Long
+    Set db = CurrentDb
+    Set rs = db.OpenRecordset("select count(*) from Utilizzo where mese = " & CLng(aYear) * 100 + aMonth)
+    numExisting = rs(0)
+    rs.Close
+    Set rs = Nothing
+    Set db = Nothing
+    modSRI_verifyOverride = numExisting
+End Function
 
-
-
-Private Sub modSRI_importRowData()
-
-    ' Remove temp table if exists
-    On Error Resume Next
-    DoCmd.DeleteObject acTable, "tblTempSRI"
-    On Error GoTo 0
-    
-    ' run saved import of SRI excel report
-    DoCmd.RunSavedImportExport "Importa-Cruscotto2018"
-End Sub
 
 
 

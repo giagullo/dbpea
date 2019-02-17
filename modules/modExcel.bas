@@ -42,6 +42,7 @@ Function modExcel_OpenExcel(UseExisting As Boolean) As Boolean
     Else
         modExcel_OpenExcel = True
     End If
+    On Error GoTo 0
 End Function
 
 Function modExcel_OpenWorkBook(strFileName As String) As Boolean
@@ -56,6 +57,7 @@ Function modExcel_OpenWorkBook(strFileName As String) As Boolean
     Else
         modExcel_OpenWorkBook = True
     End If
+    On Error GoTo 0
 End Function
 
 Function modExcel_CreateNewWorkBook() As Boolean
@@ -68,6 +70,7 @@ Function modExcel_CreateNewWorkBook() As Boolean
     Else
         modExcel_CreateNewWorkBook = True
     End If
+    On Error GoTo 0
 End Function
 Function modExcel_OpenActiveWorkSheet() As Boolean
 ' Open an existing word document
@@ -80,6 +83,7 @@ Function modExcel_OpenActiveWorkSheet() As Boolean
     Else
         modExcel_OpenActiveWorkSheet = True
     End If
+    On Error GoTo 0
 End Function
 Function modExcel_SetWorkSheet(name As String) As Boolean
 ' Open a worksheet
@@ -92,6 +96,7 @@ Function modExcel_SetWorkSheet(name As String) As Boolean
     Else
         modExcel_SetWorkSheet = True
     End If
+    On Error GoTo 0
 End Function
 
 Function modExcel_WriteCell(strCol As String, lngRow As Long, _
@@ -106,6 +111,7 @@ Function modExcel_WriteCell(strCol As String, lngRow As Long, _
     Else
         modExcel_WriteCell = True
     End If
+    On Error GoTo 0
 End Function
 Function modExcel_ReadCell(strCol As String, lngRow As Long, _
                             ByRef strCellvalue As String) As Boolean
@@ -120,6 +126,7 @@ Function modExcel_ReadCell(strCol As String, lngRow As Long, _
     Else
         modExcel_ReadCell = True
     End If
+    On Error GoTo 0
 End Function
 
 Function modExcel_CleanUp(boolCloseWorkSheet As Boolean, _
