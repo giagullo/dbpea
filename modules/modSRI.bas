@@ -4,7 +4,10 @@ Dim db As Database
 
 ' Import data from excel sFile into Utilizzo for an year and a month
 ' deleting records first if override
-Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, override As Boolean)
+' Returns BYRef number of record committed, number of record discarded
+
+Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, override As Boolean, _
+        ByRef numCommitted As Long, ByRef numDiscarded As Long)
 
     ' modSRI_importRowData
     
@@ -19,6 +22,8 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
 
     Set rstTask = db.OpenRecordset("Task", dbOpenDynaset)
     Set rstRisorsa = db.OpenRecordset("Risorsa", dbOpenDynaset)
+    Dim startTime As Date
+    startTime = Now()
     
     ' Clean current records if needed
     If override Then
@@ -40,6 +45,8 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
     modExcel_OpenActiveWorkSheet
     Dim r As Long
     r = 2
+    numCommitted = 0
+    numDiscarded = 0
     
     Dim sXlPrg As String
     Dim sXlTask As String, sXlBusinessPartner As String, sXlMonth As String, sXlAllocated As String
@@ -47,10 +54,10 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
     Do While sXlPrg <> ""
         ' read row r from excel
         ' TODO substitute with true column names
-        ok = modExcel_ReadCell("B", r, sXlTask)
-        ok = modExcel_ReadCell("C", r, sXlBusinessPartner)
-        ok = modExcel_ReadCell("D", r, sXlMonth)
-        ok = modExcel_ReadCell("E", r, sXlAllocated)
+        ok = modExcel_ReadCell("I", r, sXlTask)
+        ok = modExcel_ReadCell("D", r, sXlBusinessPartner)
+        ok = modExcel_ReadCell("N", r, sXlMonth)
+        ok = modExcel_ReadCell("L", r, sXlAllocated)
         If Not ok Then
             Err.Raise 555, Description:="Errore lettura da excel"
         End If
@@ -105,6 +112,7 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
         
         Debug.Print sSqlInsert
         db.Execute sSqlInsert, dbFailOnError
+        numCommitted = numCommitted + 1
 avanti:
         r = r + 1
         ok = modExcel_ReadCell("A", r, sXlPrg)
@@ -121,6 +129,8 @@ avanti:
     Set rstTask = Nothing
     Set rstRisorsa = Nothing
     Set db = Nothing
+    
+    numDiscarded = logError_count("modSRI_importData", startTime)
     
 End Sub
 Function modSRI_verifyOverride(aMonth As Integer, aYear As Integer) As Long

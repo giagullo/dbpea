@@ -40,9 +40,13 @@ Private Sub cmdOk_Click()
         
     End With
     Debug.Print "file: " & sFile
+    Dim nInserted As Long, nDiscard As Long
         
-    modSRI_importData txtAnno.Value, cmbMese.Value, sFile, (nExisting > 0)
-    MsgBox "Importazione completata", vbOK, "Info"
+    modSRI_importData txtAnno.Value, cmbMese.Value, sFile, (nExisting > 0), nInserted, nDiscard
+    
+    MsgBox "Importazione completata. Inseriti " & nInserted & " record. Scartarti " & nDiscard & " record", vbOKOnly, "Operazione completata"
+    
+    
 End Sub
 
 Private Sub Form_Load()
