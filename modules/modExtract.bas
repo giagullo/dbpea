@@ -1,4 +1,3 @@
-Attribute VB_Name = "modExtract"
 ' modExtract
 ' Extraction functions
 
@@ -197,7 +196,7 @@ End Sub
 
 Private Sub test1()
     Dim a(1) As String
-     a(0) = "BIR"
+     a(0) = "IVASS"
      a(1) = "SDP"
     modExtract_populateDataSheet "4Q2018", a, 2019, 2, 11
 End Sub

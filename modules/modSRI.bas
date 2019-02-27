@@ -1,6 +1,5 @@
-Attribute VB_Name = "modSRI"
 Option Compare Database
-Dim db As Database
+Dim Db As Database
 
 ' Import data from excel sFile into Utilizzo for an year and a month
 ' deleting records first if override
@@ -18,17 +17,17 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
     Dim idTask As Integer, idRisorsa As Integer
     Dim sSqlInsert As String
     
-    Set db = CurrentDb
+    Set Db = CurrentDb
 
-    Set rstTask = db.OpenRecordset("Task", dbOpenDynaset)
-    Set rstRisorsa = db.OpenRecordset("Risorsa", dbOpenDynaset)
+    Set rstTask = Db.OpenRecordset("Task", dbOpenDynaset)
+    Set rstRisorsa = Db.OpenRecordset("Risorsa", dbOpenDynaset)
     Dim startTime As Date
     startTime = Now()
     
     ' Clean current records if needed
     If override Then
         Debug.Print "deleting rows from Utilizzo"
-        db.Execute ("delete from Utilizzo where mese >= " & CLng(aYear) * 100 + aMonth)
+        Db.Execute ("delete from Utilizzo where mese >= " & CLng(aYear) * 100 + aMonth)
     End If
     
     ' open excel file
@@ -111,7 +110,7 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
         ' Stop
         
         Debug.Print sSqlInsert
-        db.Execute sSqlInsert, dbFailOnError
+        Db.Execute sSqlInsert, dbFailOnError
         numCommitted = numCommitted + 1
 avanti:
         r = r + 1
@@ -124,28 +123,24 @@ avanti:
     ' rstImport.Close
     rstTask.Close
     rstRisorsa.Close
-    db.Close
+    Db.Close
     ' Set rstImport = Nothing
     Set rstTask = Nothing
     Set rstRisorsa = Nothing
-    Set db = Nothing
+    Set Db = Nothing
     
     numDiscarded = logError_count("modSRI_importData", startTime)
     
 End Sub
 Function modSRI_verifyOverride(aMonth As Integer, aYear As Integer) As Long
-    Dim db As Database
+    Dim Db As Database
     Dim rs As Recordset
     Dim numExisting As Long
-    Set db = CurrentDb
-    Set rs = db.OpenRecordset("select count(*) from Utilizzo where mese = " & CLng(aYear) * 100 + aMonth)
+    Set Db = CurrentDb
+    Set rs = Db.OpenRecordset("select count(*) from Utilizzo where mese = " & CLng(aYear) * 100 + aMonth)
     numExisting = rs(0)
     rs.Close
     Set rs = Nothing
-    Set db = Nothing
+    Set Db = Nothing
     modSRI_verifyOverride = numExisting
 End Function
-
-
-
-

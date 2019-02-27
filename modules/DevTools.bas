@@ -1,4 +1,3 @@
-Attribute VB_Name = "DevTools"
 Option Compare Database
 
 Public Sub ExportSourceFiles(destPath As String)
@@ -6,17 +5,17 @@ Public Sub ExportSourceFiles(destPath As String)
 Dim component As VBComponent
 Dim filePath As String
 For Each component In Application.VBE.ActiveVBProject.VBComponents
-Debug.Print component.Name
-If component.Type = vbext_ct_ClassModule Or component.Type = vbext_ct_StdModule Then
-    filePath = destPath & component.Name & ToFileExtension(component.Type)
-    Debug.Print filePath
-    component.Export destPath & component.Name & ToFileExtension(component.Type)
-End If
+    Debug.Print component.name
+    If component.Type = vbext_ct_ClassModule Or component.Type = vbext_ct_StdModule Then
+        filePath = destPath & component.name & ToFileExtension(component.Type)
+        Debug.Print filePath
+        component.Export destPath & component.name & ToFileExtension(component.Type)
+    End If
 Next
  
 End Sub
  
-Private Function ToFileExtension(vbeComponentType As vbext_ComponentType) As String
+ Function ToFileExtension(vbeComponentType As vbext_ComponentType) As String
     Select Case vbeComponentType
     Case vbext_ComponentType.vbext_ct_ClassModule
     ToFileExtension = ".cls"
@@ -38,7 +37,7 @@ Public Sub ImportSourceFiles(sourcePath As String)
      
     Dim comp As VBComponent
     For Each comp In project.VBComponents
-        If Not comp.Name = "DevTools" And (comp.Type = vbext_ct_ClassModule Or comp.Type = vbext_ct_StdModule) Then
+        If Not comp.name = "DevTools" And (comp.Type = vbext_ct_ClassModule Or comp.Type = vbext_ct_StdModule) Then
             project.VBComponents.Remove comp
         End If
     Next
@@ -50,4 +49,3 @@ Public Sub ImportSourceFiles(sourcePath As String)
     Wend
 
 End Sub
-

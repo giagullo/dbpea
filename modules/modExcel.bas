@@ -1,4 +1,3 @@
-Attribute VB_Name = "modExcel"
 Option Compare Database
 Option Explicit
 ' ********************************************************************************************************
@@ -220,4 +219,3 @@ Err_Handler:
     modExcel_RefreshTablesAndPivots = False
     Exit Function
 End Function
-

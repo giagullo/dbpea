@@ -1,19 +1,18 @@
-Attribute VB_Name = "ModOneOff"
 Option Compare Database
 
 Sub mod1_importUtilizzo()
-    Dim db As Database
+    Dim Db As Database
     Dim rstImport As Recordset
     Dim rstUtilizzo As Recordset
     Dim rstTask As Recordset
     Dim rstRisorsa As Recordset
     Dim idTask As Integer, idRisorsa As Integer
     Const anno = "2018"
-    Set db = CurrentDb
-    Set rstImport = db.OpenRecordset("tblSRI", dbOpenDynaset)
-    Set rstTask = db.OpenRecordset("Task", dbOpenDynaset)
-    Set rstRisorsa = db.OpenRecordset("Risorsa", dbOpenDynaset)
-    Set rstUtilizzo = db.OpenRecordset("Utilizzo", dbOpenDynaset)
+    Set Db = CurrentDb
+    Set rstImport = Db.OpenRecordset("tblSRI", dbOpenDynaset)
+    Set rstTask = Db.OpenRecordset("Task", dbOpenDynaset)
+    Set rstRisorsa = Db.OpenRecordset("Risorsa", dbOpenDynaset)
+    Set rstUtilizzo = Db.OpenRecordset("Utilizzo", dbOpenDynaset)
     ' On Error Resume Next
     Do While Not rstImport.EOF
         ' recupera ID task
@@ -59,4 +58,3 @@ avanti:
     Set rstRisorsa = Nothing
     
 End Sub
-
