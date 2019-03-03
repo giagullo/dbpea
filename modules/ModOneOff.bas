@@ -1,18 +1,18 @@
 Option Compare Database
 
 Sub mod1_importUtilizzo()
-    Dim Db As Database
+    Dim db As Database
     Dim rstImport As Recordset
     Dim rstUtilizzo As Recordset
     Dim rstTask As Recordset
     Dim rstRisorsa As Recordset
-    Dim idTask As Integer, idRisorsa As Integer
+    Dim IDTask As Integer, idRisorsa As Integer
     Const anno = "2018"
-    Set Db = CurrentDb
-    Set rstImport = Db.OpenRecordset("tblSRI", dbOpenDynaset)
-    Set rstTask = Db.OpenRecordset("Task", dbOpenDynaset)
-    Set rstRisorsa = Db.OpenRecordset("Risorsa", dbOpenDynaset)
-    Set rstUtilizzo = Db.OpenRecordset("Utilizzo", dbOpenDynaset)
+    Set db = CurrentDb
+    Set rstImport = db.OpenRecordset("tblSRI", dbOpenDynaset)
+    Set rstTask = db.OpenRecordset("Task", dbOpenDynaset)
+    Set rstRisorsa = db.OpenRecordset("Risorsa", dbOpenDynaset)
+    Set rstUtilizzo = db.OpenRecordset("Utilizzo", dbOpenDynaset)
     ' On Error Resume Next
     Do While Not rstImport.EOF
         ' recupera ID task
@@ -21,7 +21,7 @@ Sub mod1_importUtilizzo()
             Debug.Print "Task " & rstImport!Task & " non trovata"
             GoTo avanti
         End If
-        idTask = rstTask!ID
+        IDTask = rstTask!ID
         
         ' recupera ID risorsa
         rstRisorsa.FindFirst ("Nome = '" & rstImport!risorsa & "'")
@@ -38,14 +38,14 @@ Sub mod1_importUtilizzo()
         ' inserisci utilizzo
         With rstUtilizzo
             .AddNew
-            !idTask = idTask
+            !IDTask = IDTask
             !idRisorsa = idRisorsa
             !mese = s
             !pct = rstImport!alloc * 100
             .Update
         End With
         
-        Debug.Print "Inserito "; idTask, idRisorsa, s, rstImport!alloc
+        Debug.Print "Inserito "; IDTask, idRisorsa, s, rstImport!alloc
 avanti:
         rstImport.MoveNext
     Loop

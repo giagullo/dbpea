@@ -1,6 +1,7 @@
-﻿Version =21
+﻿Version =20
 VersionRequired =20
 Begin Form
+    NavigationButtons = NotDefault
     DividingLines = NotDefault
     AllowDesignChanges = NotDefault
     DefaultView =2
@@ -9,11 +10,11 @@ Begin Form
     GridY =10
     Width =10209
     DatasheetFontHeight =11
-    ItemSuffix =8
-    Left =1020
-    Top =3130
-    Right =16150
-    Bottom =7060
+    ItemSuffix =10
+    Left =630
+    Top =2895
+    Right =13665
+    Bottom =6030
     DatasheetGridlinesColor =14806254
     RecSrcDt = Begin
         0xaf0b5323b43ae540
@@ -182,56 +183,15 @@ Begin Form
                         End
                     End
                 End
-                Begin TextBox
-                    EnterKeyBehavior = NotDefault
-                    ScrollBars =2
-                    OverlapFlags =85
-                    IMESentenceMode =3
-                    Left =2892
-                    Top =1710
-                    Width =7260
-                    Height =600
-                    ColumnWidth =3000
-                    TabIndex =2
-                    BorderColor =10921638
-                    ForeColor =4210752
-                    Name ="faseTask"
-                    ControlSource ="faseTask"
-                    StatusBarText ="Fase cui appartiene il task (studio-realizzazione-stability)"
-                    GridlineColor =10921638
-
-                    LayoutCachedLeft =2892
-                    LayoutCachedTop =1710
-                    LayoutCachedWidth =10152
-                    LayoutCachedHeight =2310
-                    Begin
-                        Begin Label
-                            OverlapFlags =85
-                            Left =342
-                            Top =1710
-                            Width =2460
-                            Height =330
-                            BorderColor =8355711
-                            ForeColor =8355711
-                            Name ="faseTask_Etichetta"
-                            Caption ="Fase"
-                            GridlineColor =10921638
-                            LayoutCachedLeft =342
-                            LayoutCachedTop =1710
-                            LayoutCachedWidth =2802
-                            LayoutCachedHeight =2040
-                        End
-                    End
-                End
                 Begin ListBox
-                    OverlapFlags =85
+                    OverlapFlags =87
                     IMESentenceMode =3
                     ColumnCount =2
-                    Left =1360
-                    Top =2437
+                    Left =1700
+                    Top =1757
                     Width =1440
                     ColumnWidth =2880
-                    TabIndex =3
+                    TabIndex =2
                     ForeColor =4210752
                     BorderColor =10921638
                     Name ="Elenco6"
@@ -242,24 +202,64 @@ Begin Form
                     ColumnWidths ="0;1440"
                     GridlineColor =10921638
 
-                    LayoutCachedLeft =1360
-                    LayoutCachedTop =2437
-                    LayoutCachedWidth =2800
-                    LayoutCachedHeight =3854
+                    LayoutCachedLeft =1700
+                    LayoutCachedTop =1757
+                    LayoutCachedWidth =3140
+                    LayoutCachedHeight =3174
                     Begin
                         Begin Label
-                            OverlapFlags =85
-                            Top =2437
+                            OverlapFlags =93
+                            Left =340
+                            Top =1757
                             Width =1350
                             Height =320
                             BorderColor =8355711
                             ForeColor =8355711
                             Name ="nomPortfolio_Etichetta"
-                            Caption ="nomPortfolio"
+                            Caption ="Portfolio"
                             GridlineColor =10921638
-                            LayoutCachedTop =2437
-                            LayoutCachedWidth =1350
-                            LayoutCachedHeight =2757
+                            LayoutCachedLeft =340
+                            LayoutCachedTop =1757
+                            LayoutCachedWidth =1690
+                            LayoutCachedHeight =2077
+                        End
+                    End
+                End
+                Begin TextBox
+                    Enabled = NotDefault
+                    Locked = NotDefault
+                    OverlapFlags =85
+                    IMESentenceMode =3
+                    Left =5272
+                    Top =1814
+                    Height =585
+                    TabIndex =3
+                    BorderColor =10921638
+                    ForeColor =4210752
+                    Name ="txtIDTask"
+                    ControlSource ="ID"
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =5272
+                    LayoutCachedTop =1814
+                    LayoutCachedWidth =6973
+                    LayoutCachedHeight =2399
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            Left =3571
+                            Top =1814
+                            Width =690
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="Etichetta9"
+                            Caption ="Id task"
+                            GridlineColor =10921638
+                            LayoutCachedLeft =3571
+                            LayoutCachedTop =1814
+                            LayoutCachedWidth =4261
+                            LayoutCachedHeight =2129
                         End
                     End
                 End

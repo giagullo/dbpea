@@ -21,18 +21,22 @@ Dim appExcel As Excel.Application
 Dim wkbExcel As Excel.Workbook
 Dim wksExcel As Excel.Worksheet
 
-Function modExcel_OpenExcel(UseExisting As Boolean) As Boolean
+Function modExcel_OpenExcel(UseExisting As Boolean, show As Boolean) As Boolean
 ' open a copy of Excel
     If UseExisting Then
         On Error Resume Next
         Set appExcel = GetObject(, "Excel.Application")
-        appExcel.Visible = True
+        If show Then
+            appExcel.Visible = True
+        End If
         Err.Clear
         
     End If
     If appExcel Is Nothing Then
         Set appExcel = CreateObject("Excel.Application")
-        appExcel.Visible = True
+        If show Then
+            appExcel.Visible = True
+        End If
     End If
     If Err <> 0 Then
         MsgBox "An error occured trying to start MS Excel : " & _

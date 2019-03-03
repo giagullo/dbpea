@@ -1,38 +1,38 @@
 Option Compare Database
-Dim Db As Database
+Dim db As Database
 
 ' Import data from excel sFile into Utilizzo for an year and a month
 ' deleting records first if override
 ' Returns BYRef number of record committed, number of record discarded
 
-Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, override As Boolean, _
-        ByRef numCommitted As Long, ByRef numDiscarded As Long)
+Function modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, override As Boolean, _
+        ByRef numCommitted As Long, ByRef numDiscarded As Long) As Boolean
 
-    ' modSRI_importRowData
+    On Error GoTo ErrorHandler
     
     ' Start processing imported table
     
     Dim rstTask As Recordset
     Dim rstRisorsa As Recordset
-    Dim idTask As Integer, idRisorsa As Integer
+    Dim IDTask As Integer, idRisorsa As Integer
     Dim sSqlInsert As String
     
-    Set Db = CurrentDb
+    Set db = CurrentDb
 
-    Set rstTask = Db.OpenRecordset("Task", dbOpenDynaset)
-    Set rstRisorsa = Db.OpenRecordset("Risorsa", dbOpenDynaset)
+    Set rstTask = db.OpenRecordset("Task", dbOpenDynaset)
+    Set rstRisorsa = db.OpenRecordset("Risorsa", dbOpenDynaset)
     Dim startTime As Date
     startTime = Now()
     
     ' Clean current records if needed
     If override Then
         Debug.Print "deleting rows from Utilizzo"
-        Db.Execute ("delete from Utilizzo where mese >= " & CLng(aYear) * 100 + aMonth)
+        db.Execute "delete from Utilizzo where mese >= " & CLng(aYear) * 100 + aMonth, dbFailOnError
     End If
     
     ' open excel file
     Dim ok As Boolean
-    ok = modExcel_OpenExcel(True)
+    ok = modExcel_OpenExcel(True, True)
     If Not ok Then
         Err.Raise 555, Description:="Errore apertura Excel"
     End If
@@ -65,6 +65,7 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
         ' build month in AAAAMM format
         If Not IsNumeric(sXlMonth) Then
              logError "modSRI_importData", "mese non numerico", r
+             numDiscarded = numDiscarded + 1
              GoTo avanti
         End If
         If CDec(sXlMonth) <> aMonth Then
@@ -76,15 +77,17 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
         rstTask.FindFirst ("codSIPROS = '" & sXlTask & "'")
         If rstTask.NoMatch Then
             logError "modSRI_importData", "Task " & sXlTask & " non trovata", r
+            numDiscarded = numDiscarded + 1
             GoTo avanti
         End If
-        idTask = rstTask!ID
+        IDTask = rstTask!ID
         
         ' recupera ID risorsa
         rstRisorsa.FindFirst ("Nome = """ & sXlBusinessPartner & """")
                 
         If rstRisorsa.NoMatch Then
             logError "modSRI_importData", "Risorsa " & doubleApex(sXlBusinessPartner) & " non trovata", r
+            numDiscarded = numDiscarded + 1
             GoTo avanti
         End If
         idRisorsa = rstRisorsa!ID
@@ -93,24 +96,26 @@ Sub modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, over
         Dim dblUtilizzo As Double
         If Not IsNumeric(Nz(sXlAllocated, "x")) Then
             logError "modSRI_importData", "dato numerico non valido", r
+            numDiscarded = numDiscarded + 1
             GoTo avanti
         End If
         dblUtilizzo = CDbl(sXlAllocated) * 100
         If dblUtilizzo < 0 Or dblUtilizzo > 100 Then
             logError "modSRI_importData", "dato numerico fuori range", r
+            numDiscarded = numDiscarded + 1
             GoTo avanti
         End If
                         
         ' inserisci utilizzo
         sSqlInsert = "INSERT INTO Utilizzo (idTask, idRisorsa, mese, pct) VALUES (" & _
-                    idTask & "," & _
+                    IDTask & "," & _
                     idRisorsa & "," & _
                     s & "," & _
                     dblUtilizzo & ")"
         ' Stop
         
         Debug.Print sSqlInsert
-        Db.Execute sSqlInsert, dbFailOnError
+        db.Execute sSqlInsert, dbFailOnError
         numCommitted = numCommitted + 1
 avanti:
         r = r + 1
@@ -123,24 +128,44 @@ avanti:
     ' rstImport.Close
     rstTask.Close
     rstRisorsa.Close
-    Db.Close
+    db.Close
     ' Set rstImport = Nothing
     Set rstTask = Nothing
     Set rstRisorsa = Nothing
-    Set Db = Nothing
+    Set db = Nothing
+    modSRI_importData = True
+    Exit Function
     
-    numDiscarded = logError_count("modSRI_importData", startTime)
+ErrorHandler:
+    Select Case ErrorLogging(Err.Number, Err.Description, "modSRI_importData")
+    Case 1: Resume
+    Case 2: Resume Next
+    Case Else:
+        If Not rstTask Is Nothing Then
+            rstTask.Close
+            Set rstTask = Nothing
+        End If
+        If Not rstRisorsa Is Nothing Then
+            rstRisorsa.Close
+            Set rstRisorsa = Nothing
+        End If
+        db.Close
+        Set db = Nothing
+        modSRI_importData = False
+    End Select
+    Exit Function
     
-End Sub
+    
+End Function
 Function modSRI_verifyOverride(aMonth As Integer, aYear As Integer) As Long
-    Dim Db As Database
+    Dim db As Database
     Dim rs As Recordset
     Dim numExisting As Long
-    Set Db = CurrentDb
-    Set rs = Db.OpenRecordset("select count(*) from Utilizzo where mese = " & CLng(aYear) * 100 + aMonth)
+    Set db = CurrentDb
+    Set rs = db.OpenRecordset("select count(*) from Utilizzo where mese = " & CLng(aYear) * 100 + aMonth)
     numExisting = rs(0)
     rs.Close
     Set rs = Nothing
-    Set Db = Nothing
+    Set db = Nothing
     modSRI_verifyOverride = numExisting
 End Function

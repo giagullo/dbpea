@@ -534,7 +534,11 @@ Private Sub cmdOk_Click()
     Next v
     
     
-    modExtract_populateDataSheet lstScenario.Value, portfolios, txtAnno, cmbMese.Value, txtNumMesi
+    ret = modExtract_populateDataSheet(lstScenario.Value, portfolios, txtAnno, cmbMese.Value, txtNumMesi)
+    If ret Then
+        Me.SetFocus
+        MsgBox "Scenario " & lstScenario.Value & " generato in excel"
+    End If
 End Sub
 
 Private Sub Corpo_Click()

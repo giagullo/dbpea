@@ -1,0 +1,4 @@
+﻿tblErrorLog
+;DATABASE=.\DBoper_be.accdb
+tblErrorLog
+ErrorLogId

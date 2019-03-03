@@ -1,0 +1,5 @@
+-- Error codes
+513	invalid input
+514	external application fault
+515	file not found
+

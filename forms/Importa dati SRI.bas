@@ -1,18 +1,20 @@
 ﻿Version =20
 VersionRequired =20
 Begin Form
+    RecordSelectors = NotDefault
+    NavigationButtons = NotDefault
     DividingLines = NotDefault
     AllowDesignChanges = NotDefault
     DefaultView =0
     PictureAlignment =2
     DatasheetGridlinesBehavior =3
     GridY =10
-    Width =5348
+    Width =5952
     DatasheetFontHeight =11
     ItemSuffix =20
     Top =600
-    Right =5895
-    Bottom =1905
+    Right =6210
+    Bottom =2400
     DatasheetGridlinesColor =14806254
     RecSrcDt = Begin
         0xc554ab75ef3ee540
@@ -122,9 +124,8 @@ Begin Form
             GridlineShade =65.0
         End
         Begin Section
-            Height =1320
+            Height =1814
             Name ="Corpo"
-            AutoHeight =1
             AlternateBackColor =15921906
             AlternateBackThemeColorIndex =1
             AlternateBackShade =95.0
@@ -137,8 +138,8 @@ Begin Form
                     TextAlign =1
                     IMESentenceMode =3
                     ListWidth =1440
-                    Left =1860
-                    Top =360
+                    Left =2130
+                    Top =510
                     Width =1695
                     Height =315
                     BorderColor =10921638
@@ -152,10 +153,10 @@ Begin Form
                     GridlineColor =10921638
                     AllowValueListEdits =0
 
-                    LayoutCachedLeft =1860
-                    LayoutCachedTop =360
-                    LayoutCachedWidth =3555
-                    LayoutCachedHeight =675
+                    LayoutCachedLeft =2130
+                    LayoutCachedTop =510
+                    LayoutCachedWidth =3825
+                    LayoutCachedHeight =825
                     ColumnStart =1
                     ColumnEnd =1
                     LayoutGroup =1
@@ -164,8 +165,8 @@ Begin Form
                         Begin Label
                             OverlapFlags =85
                             TextAlign =1
-                            Left =360
-                            Top =360
+                            Left =630
+                            Top =510
                             Width =1440
                             Height =315
                             BorderColor =8355711
@@ -175,10 +176,10 @@ Begin Form
                             GroupTable =1
                             BottomPadding =150
                             GridlineColor =10921638
-                            LayoutCachedLeft =360
-                            LayoutCachedTop =360
-                            LayoutCachedWidth =1800
-                            LayoutCachedHeight =675
+                            LayoutCachedLeft =630
+                            LayoutCachedTop =510
+                            LayoutCachedWidth =2070
+                            LayoutCachedHeight =825
                             LayoutGroup =1
                             GroupTable =1
                         End
@@ -188,8 +189,8 @@ Begin Form
                     OverlapFlags =85
                     TextAlign =1
                     IMESentenceMode =3
-                    Left =1860
-                    Top =855
+                    Left =2130
+                    Top =1005
                     Width =1695
                     Height =315
                     TabIndex =2
@@ -201,10 +202,10 @@ Begin Form
                     BottomPadding =150
                     GridlineColor =10921638
 
-                    LayoutCachedLeft =1860
-                    LayoutCachedTop =855
-                    LayoutCachedWidth =3555
-                    LayoutCachedHeight =1170
+                    LayoutCachedLeft =2130
+                    LayoutCachedTop =1005
+                    LayoutCachedWidth =3825
+                    LayoutCachedHeight =1320
                     RowStart =1
                     RowEnd =1
                     ColumnStart =1
@@ -218,8 +219,8 @@ Begin Form
                         Begin Label
                             OverlapFlags =85
                             TextAlign =1
-                            Left =360
-                            Top =855
+                            Left =630
+                            Top =1005
                             Width =1440
                             Height =315
                             BorderColor =8355711
@@ -229,10 +230,10 @@ Begin Form
                             GroupTable =1
                             BottomPadding =150
                             GridlineColor =10921638
-                            LayoutCachedLeft =360
-                            LayoutCachedTop =855
-                            LayoutCachedWidth =1800
-                            LayoutCachedHeight =1170
+                            LayoutCachedLeft =630
+                            LayoutCachedTop =1005
+                            LayoutCachedWidth =2070
+                            LayoutCachedHeight =1320
                             RowStart =1
                             RowEnd =1
                             LayoutGroup =1
@@ -243,8 +244,8 @@ Begin Form
                 Begin CommandButton
                     Default = NotDefault
                     OverlapFlags =85
-                    Left =3615
-                    Top =360
+                    Left =3885
+                    Top =510
                     Width =1695
                     Height =315
                     TabIndex =1
@@ -295,10 +296,10 @@ Begin Form
                     BottomPadding =150
                     GridlineColor =10921638
 
-                    LayoutCachedLeft =3615
-                    LayoutCachedTop =360
-                    LayoutCachedWidth =5310
-                    LayoutCachedHeight =675
+                    LayoutCachedLeft =3885
+                    LayoutCachedTop =510
+                    LayoutCachedWidth =5580
+                    LayoutCachedHeight =825
                     ColumnStart =2
                     ColumnEnd =2
                     LayoutGroup =1
@@ -313,11 +314,12 @@ Begin Form
                     WebImagePaddingTop =2
                     WebImagePaddingRight =1
                     WebImagePaddingBottom =9
+                    Overlaps =1
                 End
                 Begin CommandButton
                     OverlapFlags =85
-                    Left =3615
-                    Top =855
+                    Left =3885
+                    Top =1005
                     Width =1695
                     Height =315
                     TabIndex =3
@@ -388,10 +390,10 @@ Begin Form
                         End
                     End
 
-                    LayoutCachedLeft =3615
-                    LayoutCachedTop =855
-                    LayoutCachedWidth =5310
-                    LayoutCachedHeight =1170
+                    LayoutCachedLeft =3885
+                    LayoutCachedTop =1005
+                    LayoutCachedWidth =5580
+                    LayoutCachedHeight =1320
                     RowStart =1
                     RowEnd =1
                     ColumnStart =2
@@ -408,6 +410,7 @@ Begin Form
                     WebImagePaddingTop =2
                     WebImagePaddingRight =1
                     WebImagePaddingBottom =9
+                    Overlaps =1
                 End
             End
         End
@@ -443,7 +446,7 @@ Private Sub cmdOk_Click()
     Dim sFile As String
     With Application.FileDialog(msoFileDialogOpen)
         .AllowMultiSelect = False
-        .Show
+        .show
         sFile = .SelectedItems.Item(1)
         If sFile = "" Then
             Exit Sub
@@ -453,10 +456,11 @@ Private Sub cmdOk_Click()
     Debug.Print "file: " & sFile
    Dim nInserted As Long, nDiscard As Long
         
-    modSRI_importData txtAnno.Value, cmbMese.Value, sFile, (nExisting > 0), nInserted, nDiscard
+    ret = modSRI_importData(txtAnno.Value, cmbMese.Value, sFile, (nExisting > 0), nInserted, nDiscard)
     
-    MsgBox "Importazione completata. Inseriti " & nInserted & " record. Scartarti " & nDiscard & " record", vbOKOnly, "Operazione completata"
-    
+    If ret Then
+        MsgBox "Importazione completata. Inseriti " & nInserted & " record. Scartarti " & nDiscard & " record", vbOKOnly, "Operazione completata"
+    End If
 End Sub
 
 Private Sub Form_Load()

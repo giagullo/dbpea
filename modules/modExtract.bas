@@ -11,9 +11,11 @@
 
 
 Option Compare Database
-Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
-                                year As Integer, month As Integer, nMonths As Integer)
+Function modExtract_populateDataSheet(scenario As String, portfolios() As String, _
+                                year As Integer, month As Integer, nMonths As Integer) As Boolean
 
+    On Error GoTo ErrorHandler
+    
     Dim ok As Boolean
     ' First data row in TabDati
     Const iFirstDataRow = 4
@@ -26,38 +28,35 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
     Debug.Print "Processing " & scenario
     If UBound(portfolios) - LBound(portfolios) + 1 = 0 Then
         Err.Raise 513, Description:="Bad input: zero length array"
-        Exit Sub
     End If
     If year < 2010 Then
         Err.Raise 513, Description:="Bad input: year too old"
-        Exit Sub
     End If
     If month < 1 Or month > 12 Then
         Err.Raise 513, Description:="Bad input: bad month number"
-        Exit Sub
     End If
     If nMonths < 1 Or nMonths > 12 Then
         Err.Raise 513, Description:="Bad input: bad number of months (1 to 12)"
-        Exit Sub
     End If
     ' set month ini as YYYYMM numeric
     iMonthIni = CLng(year) * 100 + month
          
      ' open excel template
-    ok = modExcel_OpenExcel(True)
+    ok = modExcel_OpenExcel(True, False)
     If Not ok Then
-        Stop
+        Err.Raise 514, Description:="Error opening excel"
     End If
             
-    ok = modExcel_OpenWorkBook(CurrentProject.Path & "\Template Foglio raccolta dati.xlsm")
+    ok = modExcel_OpenWorkBook(CurrentProject.Path & "\Template.xlsm")
     If Not ok Then
-        Stop
+        Err.Raise 515, Description:="template foglio raccolta dati: possibile file xls mancante in " & _
+            CurrentProject.Path & "\Template Foglio raccolta dati.xlsm"
     End If
     
     ' Populate TabTasks
     ok = modExcel_SetWorkSheet("Iniziative")
     If Not ok Then
-        Stop
+        Err.Raise 515, Description:="Template excel errato - Manca foglio Iniziative"
     End If
     
     Dim rstIniziativa As Recordset
@@ -88,13 +87,13 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
     Set rstIniziativa = Nothing
     Set qdf = Nothing
     If Not ok Then
-        Stop
+        Err.Raise 514, Description:="Errore in scrittura su file excel"
     End If
     
     ' Populate TabRisorse
     ok = modExcel_SetWorkSheet("Personale DAPI")
     If Not ok Then
-        Stop
+        Err.Raise 515, Description:="Template excel errato - Manca foglio Personale DAPI"
     End If
     Dim rstRisorse As Recordset
     Dim sQueryRes As String
@@ -111,10 +110,9 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
     Set rstRisorse = Nothing
     
     ' Populate dati sheet
-    ' create a cursor on  qry_TabelloneAllocazioniXScenario
     ok = modExcel_SetWorkSheet("Dati")
     If Not ok Then
-        Stop
+        Err.Raise 515, Description:="Template excel errato - Manca foglio Dati"
     End If
 
     Dim rstQry As Recordset
@@ -140,7 +138,7 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
         d = DateSerial(iYear, iThisMon, 1)
         ok = modExcel_WriteCell(Chr(64 + iCol), 3, d)
         If Not ok Then
-            Exit Sub
+            Err.Raise 514, Description:="Errore in scrittura su file excel"
         End If
     Next i
     
@@ -179,7 +177,7 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
             iCol = iFirstDataCol + iMonth - iMonthIni
             ok = modExcel_WriteCell(Chr(64 + iCol), iRow, dblPct)
             If Not ok Then
-                Exit Do
+                Err.Raise 514, Description:="Errore in scrittura su file excel"
             End If
             prevTask = curTask
             prevRes = curRes
@@ -191,12 +189,39 @@ Sub modExtract_populateDataSheet(scenario As String, portfolios() As String, _
     qdf.Close
     Set qdf = Nothing
     Set rstQry = Nothing
-    Debug.Print "modExtract_populateDataSheet: exit"
-End Sub
+    modExtract_populateDataSheet = True
+    Exit Function
+
+ErrorHandler:
+    Select Case ErrorLogging(Err.Number, Err.Description, "modExtract_populateDataSheet")
+    Case 1: Resume
+    Case 2: Resume Next
+    Case Else:
+        If Not rstQry Is Nothing Then
+            rstQry.Close
+            Set rstQry = Nothing
+        End If
+        If Not qdf Is Nothing Then
+            qdf.Close
+            Set qdf = Nothing
+        End If
+        modExtract_populateDataSheet = False
+    End Select
+    Exit Function
+End Function
 
 Private Sub test1()
     Dim a(1) As String
      a(0) = "IVASS"
      a(1) = "SDP"
     modExtract_populateDataSheet "4Q2018", a, 2019, 2, 11
+End Sub
+Private Sub test2()
+   Dim a(1) As String
+     a(0) = "IVASS"
+     a(1) = "SDP"
+    Dim ret As Boolean
+    ret = modExtract_populateDataSheet("4Q2018", a, 2019, 1, 11)
+    Debug.Assert (Not ret)
+    Debug.Print "test2 ok"
 End Sub
