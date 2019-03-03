@@ -456,7 +456,7 @@ Private Sub cmdOk_Click()
    Dim nInserted As Long, nDiscard As Long
         
     ret = modSRI_importData(txtAnno.Value, cmbMese.Value, sFile, (nExisting > 0), nInserted, nDiscard)
-    
+    ' check return code and exit
     If ret Then
         MsgBox "Importazione completata. Inseriti " & nInserted & " record. Scartarti " & nDiscard & " record", vbOKOnly, "Operazione completata"
     End If
