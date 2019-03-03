@@ -447,11 +447,10 @@ Private Sub cmdOk_Click()
     With Application.FileDialog(msoFileDialogOpen)
         .AllowMultiSelect = False
         .show
-        sFile = .SelectedItems.Item(1)
-        If sFile = "" Then
+        If .SelectedItems.Count = 0 Then
             Exit Sub
         End If
-        
+        sFile = .SelectedItems.Item(1)
     End With
     Debug.Print "file: " & sFile
    Dim nInserted As Long, nDiscard As Long
@@ -461,6 +460,7 @@ Private Sub cmdOk_Click()
     If ret Then
         MsgBox "Importazione completata. Inseriti " & nInserted & " record. Scartarti " & nDiscard & " record", vbOKOnly, "Operazione completata"
     End If
+    DoCmd.Close
 End Sub
 
 Private Sub Form_Load()
