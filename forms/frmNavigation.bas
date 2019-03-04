@@ -14,10 +14,10 @@ Begin Form
     Width =8627
     DatasheetFontHeight =11
     ItemSuffix =12
-    Left =2970
-    Top =585
-    Right =11850
-    Bottom =10155
+    Left =2940
+    Top =690
+    Right =11820
+    Bottom =10260
     DatasheetGridlinesColor =14806254
     RecSrcDt = Begin
         0xd2a92b57cfc9e340
@@ -299,6 +299,7 @@ Begin Form
                     ForeColor =4210752
                     Name ="cmdStaticData"
                     Caption ="Anagrafica progetti e task"
+                    OnClick ="[Event Procedure]"
                     GridlineColor =10921638
 
                     LayoutCachedLeft =5102
@@ -381,4 +382,8 @@ End Sub
 
 Private Sub cmdImportSRI_Click()
     DoCmd.OpenForm "Importa dati SRI"
+End Sub
+
+Private Sub cmdStaticData_Click()
+    DoCmd.OpenForm "Anagrafe Progetti e Task"
 End Sub

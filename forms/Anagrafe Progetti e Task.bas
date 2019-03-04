@@ -3,7 +3,6 @@ VersionRequired =20
 Begin Form
     AutoCenter = NotDefault
     DividingLines = NotDefault
-    FilterOn = NotDefault
     OrderByOn = NotDefault
     AllowDesignChanges = NotDefault
     DefaultView =0
@@ -11,13 +10,13 @@ Begin Form
     PictureAlignment =2
     DatasheetGridlinesBehavior =3
     GridY =10
-    Width =13394
+    Width =13964
     DatasheetFontHeight =11
-    ItemSuffix =9
-    Left =315
+    ItemSuffix =13
+    Left =30
     Top =1695
-    Right =14250
-    Bottom =7980
+    Right =14535
+    Bottom =10290
     DatasheetGridlinesColor =14806254
     Filter ="([Progetto].[codSIPROS]=\"975-A0016\")"
     OrderBy ="[Progetto].[codSIPROS]"
@@ -76,6 +75,24 @@ Begin Form
             GridlineThemeColorIndex =1
             GridlineShade =65.0
         End
+        Begin ComboBox
+            AddColon = NotDefault
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            FontSize =11
+            FontName ="Calibri"
+            AllowValueListEdits =1
+            InheritValueList =1
+            ThemeFontIndex =1
+            BackThemeColorIndex =1
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            ForeThemeColorIndex =2
+            ForeShade =50.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
         Begin Subform
             BorderLineStyle =0
             Width =1701
@@ -116,7 +133,7 @@ Begin Form
             End
         End
         Begin Section
-            Height =5278
+            Height =7333
             Name ="Corpo"
             AutoHeight =1
             AlternateBackColor =15921906
@@ -209,8 +226,8 @@ Begin Form
                     OverlapFlags =85
                     Left =340
                     Top =1870
-                    Width =13054
-                    Height =3408
+                    Width =13624
+                    Height =5463
                     TabIndex =2
                     BorderColor =10921638
                     Name ="Task Sottomaschera"
@@ -222,8 +239,50 @@ Begin Form
 
                     LayoutCachedLeft =340
                     LayoutCachedTop =1870
-                    LayoutCachedWidth =13394
-                    LayoutCachedHeight =5278
+                    LayoutCachedWidth =13964
+                    LayoutCachedHeight =7333
+                End
+                Begin ComboBox
+                    OverlapFlags =85
+                    IMESentenceMode =3
+                    ColumnCount =2
+                    Left =11225
+                    Top =396
+                    Width =2557
+                    Height =315
+                    TabIndex =3
+                    BorderColor =10921638
+                    ForeColor =4138256
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"6\""
+                    Name ="CasellaCombinata11"
+                    ControlSource ="codStatoPPPM"
+                    RowSourceType ="Table/Query"
+                    RowSource ="CodPPPM"
+                    ColumnWidths ="567;2835"
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =11225
+                    LayoutCachedTop =396
+                    LayoutCachedWidth =13782
+                    LayoutCachedHeight =711
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            Left =10374
+                            Top =396
+                            Width =690
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="Etichetta12"
+                            Caption ="PPPM"
+                            GridlineColor =10921638
+                            LayoutCachedLeft =10374
+                            LayoutCachedTop =396
+                            LayoutCachedWidth =11064
+                            LayoutCachedHeight =711
+                        End
+                    End
                 End
             End
         End

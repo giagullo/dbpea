@@ -20,5 +20,12 @@ CREATE TABLE tblErrorLog (
 	errorProc varchar(255),
 	WindowsUsername varchar (255));
 	
-	
+-- ALTER 4/3 
+CREATE TABLE CodPPPM (
+	codStatoPPPM char(3) NOT NULL PRIMARY KEY,
+	descStatoPPPM varchar(255) NOT NULL);
+ALTER TABLE Progetto ADD (
+	codStatoPPPM char(3) NOT NULL DEFAULT 'NOP');
 
+ALTER TABLE Progetto ADD FOREIGN KEY (codStatoPPPM) 
+     REFERENCES CodPPPM(codStatoPPPM);

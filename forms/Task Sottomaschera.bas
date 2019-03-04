@@ -8,13 +8,13 @@ Begin Form
     PictureAlignment =2
     DatasheetGridlinesBehavior =3
     GridY =10
-    Width =10209
+    Width =10827
     DatasheetFontHeight =11
-    ItemSuffix =10
+    ItemSuffix =12
     Left =630
     Top =2895
-    Right =13665
-    Bottom =6030
+    Right =14235
+    Bottom =6285
     DatasheetGridlinesColor =14806254
     RecSrcDt = Begin
         0xaf0b5323b43ae540
@@ -81,6 +81,24 @@ Begin Form
             BorderShade =65.0
             ForeThemeColorIndex =0
             ForeTint =75.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin ComboBox
+            AddColon = NotDefault
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            FontSize =11
+            FontName ="Calibri"
+            AllowValueListEdits =1
+            InheritValueList =1
+            ThemeFontIndex =1
+            BackThemeColorIndex =1
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            ForeThemeColorIndex =2
+            ForeShade =50.0
             GridlineThemeColorIndex =1
             GridlineShade =65.0
         End
@@ -151,7 +169,7 @@ Begin Form
                     Top =1026
                     Width =7260
                     Height =600
-                    ColumnWidth =5520
+                    ColumnWidth =4080
                     TabIndex =1
                     BorderColor =10921638
                     ForeColor =4210752
@@ -184,7 +202,7 @@ Begin Form
                     End
                 End
                 Begin ListBox
-                    OverlapFlags =87
+                    OverlapFlags =215
                     IMESentenceMode =3
                     ColumnCount =2
                     Left =1700
@@ -230,7 +248,7 @@ Begin Form
                     Locked = NotDefault
                     OverlapFlags =85
                     IMESentenceMode =3
-                    Left =5272
+                    Left =4592
                     Top =1814
                     Height =585
                     TabIndex =3
@@ -240,14 +258,14 @@ Begin Form
                     ControlSource ="ID"
                     GridlineColor =10921638
 
-                    LayoutCachedLeft =5272
+                    LayoutCachedLeft =4592
                     LayoutCachedTop =1814
-                    LayoutCachedWidth =6973
+                    LayoutCachedWidth =6293
                     LayoutCachedHeight =2399
                     Begin
                         Begin Label
-                            OverlapFlags =85
-                            Left =3571
+                            OverlapFlags =93
+                            Left =2891
                             Top =1814
                             Width =690
                             Height =315
@@ -256,9 +274,9 @@ Begin Form
                             Name ="Etichetta9"
                             Caption ="Id task"
                             GridlineColor =10921638
-                            LayoutCachedLeft =3571
+                            LayoutCachedLeft =2891
                             LayoutCachedTop =1814
-                            LayoutCachedWidth =4261
+                            LayoutCachedWidth =3581
                             LayoutCachedHeight =2129
                         End
                     End
