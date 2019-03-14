@@ -185,6 +185,7 @@ Begin Form
                     ForeColor =4210752
                     Name ="cmdAcqAllocFile"
                     Caption ="Acquisizione file allocazioni"
+                    OnClick ="[Event Procedure]"
                     GridlineColor =10921638
 
                     LayoutCachedLeft =566
@@ -371,6 +372,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+
+Private Sub cmdAcqAllocFile_Click()
+    DoCmd.OpenForm "Carica allocazione"
+End Sub
 
 Private Sub cmdClose_Click()
     DoCmd.Close

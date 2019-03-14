@@ -223,3 +223,12 @@ Err_Handler:
     modExcel_RefreshTablesAndPivots = False
     Exit Function
 End Function
+
+Function modExcel_RunMacro(macro As String) As Boolean
+    On Error GoTo Err_Handler
+    modExcel_RunMacro = True
+    appExcel.Run macro
+    Exit Function
+Err_Handler:
+    modExcel_RunMacro = False
+End Function

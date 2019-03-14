@@ -24,6 +24,7 @@ Function modExtract_populateDataSheet(scenario As String, portfolios() As String
     
      ' check input
     Dim iMonthIni As Long
+    Dim i As Long
     
     Debug.Print "Processing " & scenario
     If UBound(portfolios) - LBound(portfolios) + 1 = 0 Then
@@ -40,9 +41,14 @@ Function modExtract_populateDataSheet(scenario As String, portfolios() As String
     End If
     ' set month ini as YYYYMM numeric
     iMonthIni = CLng(year) * 100 + month
-         
+    Dim iMonthFinal As Integer, yearFinal As Integer
+    Dim iMonthFin As Long
+    iMonthFinal = (month + nMonths - 2) Mod 12 + 1
+    yearFinal = IIf(month + nMonths - 1 > 12, year + 1, year)
+    iMonthFin = iMonthFinal + CLng(yearFinal) * 100
+     
      ' open excel template
-    ok = modExcel_OpenExcel(True, False)
+    ok = modExcel_OpenExcel(True, True)
     If Not ok Then
         Err.Raise 514, Description:="Error opening excel"
     End If
@@ -52,6 +58,18 @@ Function modExtract_populateDataSheet(scenario As String, portfolios() As String
         Err.Raise 515, Description:="template foglio raccolta dati: possibile file xls mancante in " & _
             CurrentProject.Path & "\Template Foglio raccolta dati.xlsm"
     End If
+    
+    ' --- Set metadata values in Meta sheet
+    ok = modExcel_SetWorkSheet("meta")
+    If Not ok Then
+        Err.Raise 515, Description:="Template excel errato - Manca foglio Meta"
+    End If
+    ok = modExcel_WriteCell("B", 1, scenario)
+    ok = modExcel_WriteCell("B", 2, iMonthIni)
+    ok = modExcel_WriteCell("B", 3, iMonthFin)
+    For i = LBound(portfolios) To UBound(portfolios)
+        ok = modExcel_WriteCell(Chr(66 + i - LBound(portfolios)), 4, portfolios(i))
+    Next i
     
     ' Populate TabTasks
     ok = modExcel_SetWorkSheet("Iniziative")
@@ -118,23 +136,23 @@ Function modExtract_populateDataSheet(scenario As String, portfolios() As String
     Dim rstQry As Recordset
     Dim prevTask As String, curTask As String
     Dim prevRes As String, curRes As String
-    Dim iMonthFin As Long
     Dim iMonth As Long
     Dim sPortfolio As String
     Dim dblPct As Double
     iMonthFin = iMonthIni + nMonths - 1
     
     ' at row 3, from "F" onward, write date 1/month/year
-    Dim i As Long
+    
     Dim iCol As Integer
     Dim iYear As Long
     Dim iThisMon As Long
-    For i = iMonthIni To iMonthFin
+    For i = 0 To 11
         Dim d As Date
         
-        iCol = iFirstDataCol + i - iMonthIni
-        iYear = i / 100
-        iThisMon = i - CLng(year) * 100
+        iCol = iFirstDataCol + i
+        iYear = IIf(month + i > 12, year + 1, year)
+        ' iMonthFinal = (month + nMonths - 2) Mod 12 + 1
+        iThisMon = (month - 1 + i) Mod 12 + 1
         d = DateSerial(iYear, iThisMon, 1)
         ok = modExcel_WriteCell(Chr(64 + iCol), 3, d)
         If Not ok Then
@@ -184,6 +202,12 @@ Function modExtract_populateDataSheet(scenario As String, portfolios() As String
         End If
         rstQry.MoveNext
     Loop
+
+    ' run macro to protect sheets
+    ok = modExcel_RunMacro("templateDataCollection_ProtectSheets")
+    If Not ok Then
+        Err.Raise 514, Description:="Errore in esecuzione macro Protect su file excel"
+    End If
 
     rstQry.Close
     qdf.Close

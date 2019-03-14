@@ -5,6 +5,9 @@ Dim db As Database
 ' deleting records first if override
 ' Returns BYRef number of record committed, number of record discarded
 
+
+Dim sArrHead(5) As String
+
 Function modSRI_importData(aYear As Integer, aMonth As Integer, sFile As String, override As Boolean, _
         ByRef numCommitted As Long, ByRef numDiscarded As Long) As Boolean
 

@@ -1,6 +1,7 @@
 ﻿Version =20
 VersionRequired =20
 Begin Form
+    PopUp = NotDefault
     NavigationButtons = NotDefault
     DividingLines = NotDefault
     AllowDesignChanges = NotDefault
@@ -11,10 +12,10 @@ Begin Form
     Width =8018
     DatasheetFontHeight =11
     ItemSuffix =41
-    Left =360
-    Top =1080
-    Right =8925
-    Bottom =4275
+    Left =4665
+    Top =3165
+    Right =12975
+    Bottom =6105
     DatasheetGridlinesColor =14806254
     RecSrcDt = Begin
         0x11235d41593ee540
@@ -349,7 +350,7 @@ Begin Form
                     Begin
                         Begin Label
                             OverlapFlags =85
-                            TextAlign =1
+                            TextAlign =3
                             Left =3255
                             Top =1950
                             Width =1440
@@ -524,7 +525,7 @@ Private Sub cmdOk_Click()
     Debug.Print lstScenario.Value, cmbMese.Value, txtAnno, txtNumMesi
     
     Dim portfolios() As String
-    ReDim portfolios(lstPortfolio.ItemsSelected.Count)
+    ReDim portfolios(lstPortfolio.ItemsSelected.Count - 1)
     Dim i As Integer
     i = 0
     For Each v In lstPortfolio.ItemsSelected
