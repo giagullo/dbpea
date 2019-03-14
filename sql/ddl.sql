@@ -29,3 +29,6 @@ ALTER TABLE Progetto ADD (
 
 ALTER TABLE Progetto ADD FOREIGN KEY (codStatoPPPM) 
      REFERENCES CodPPPM(codStatoPPPM);
+--- COMMITTED
+ALTER TABLE Task (codSIPROS varchar(24) check non newline);
+--- COMMITTED
